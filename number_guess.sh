@@ -16,11 +16,11 @@ NUMBER=$((RANDOM % 10 + 1))
 echo $NUMBER
 ATTEMPT=0
 SCORE=$($PSQL "SELECT score FROM ng WHERE name = '$USER_NAME'")
-echo schore: $SCORE
+GAMES_PLAYED=$($PSQL "SELECT games_played FROM ng WHERE name = '$USER_NAME'")
 GAME() {
   echo Which No.?
   read GUESS
-  ATTEMPT=$((ATTEMPT+1))
+  ATTEMPT=$((ATTEMPT + 1))
   echo $ATTEMPT
   if [[ $GUESS -lt $NUMBER ]]; then
     echo Try higher
@@ -30,12 +30,11 @@ GAME() {
     GAME
   else
     echo ~~YOU WON~~
-    if [[ $ATTEMPT -gt $SCORE ]]
-      then
-      #BEST_GAME=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$USER_NAME'")
+    if [[ $ATTEMPT -lt $SCORE ]]; then
+      BEST_GAME=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$USER_NAME'")
+      GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = ($GAMES_PLAYED + 1) WHERE name = '$USER_NAME'")
       echo new highscore
     fi
   fi
 }
 GAME
-

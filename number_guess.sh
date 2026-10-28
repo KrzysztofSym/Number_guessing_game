@@ -30,9 +30,13 @@ GAME() {
     GAME
   else
     echo ~~YOU WON~~
-    if [[ $ATTEMPT -lt $SCORE ]]; then
-      BEST_GAME=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$USER_NAME'")
-      GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = ($GAMES_PLAYED + 1) WHERE name = '$USER_NAME'")
+    # if [[ -z $GAMES_PLAYED ]]; then
+    #   NEW_GAME_UPDATE=$($PSQL "UPDATE ng SET games_played = 1 WHERE name = '$NAME'")
+    # else
+      GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = ($GAMES_PLAYED + 1) WHERE name = '$NAME'")
+    fi
+    if [[ $ATTEMPT -lt $SCORE || -z $SCORE ]]; then
+      BEST_GAME=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$NAME'")
       echo new highscore
     fi
   fi

@@ -9,14 +9,15 @@ echo Which No.?
 NUMBER=$((RANDOM % 10 + 1))
 echo $NUMBER
 ATTEMPT=0
-USER_NAME=$($PSQL "SELECT name FROM ng WHERE name = '$NAME';")
-SCORE=$($PSQL "SELECT score FROM ng WHERE name = '$USER_NAME'")
-GAMES_PLAYED=$($PSQL "SELECT games_played FROM ng WHERE name = '$USER_NAME'")
-if [[ -z $USER_NAME ]]; then
-  NEW_NAME=$($PSQL "INSERT INTO ng(name) VALUES('$NAME')")
+#USER_NAME=$($PSQL "SELECT name FROM ng WHERE name = '$NAME';")
+USER_EXISTS=$($PSQL "SELECT EXISTS(SELECT 1 FROM ng WHERE name = '$NAME');")
+SCORE=$($PSQL "SELECT score FROM ng WHERE name = '$NAME'")
+GAMES_PLAYED=$($PSQL "SELECT games_played FROM ng WHERE name = '$NAME'")
+if [[ $USER_EXISTS == 'f' ]]; then
+  NEW_NAME=$($PSQL "INSERT INTO ng(name, games_played) VALUES('$NAME', 0)")
   echo Welcome, $NAME! It looks like this is your first time here.
 else
-  echo "Welcome back, $USER_NAME! You have played <games_played> games, and your best game took <best_game> guesses."
+  echo "Welcome back, $NAME! You have played <games_played> games, and your best game took <best_game> guesses."
 fi
 
 GAME() {

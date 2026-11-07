@@ -17,7 +17,7 @@ if [[ $USER_EXISTS == 'f' ]]; then
   NEW_NAME=$($PSQL "INSERT INTO ng(name, games_played) VALUES('$NAME', 0)")
   echo Welcome, $NAME! It looks like this is your first time here.
 else
-  echo "Welcome back, $NAME! You have played <games_played> games, and your best game took <best_game> guesses."
+  echo "Welcome back, $NAME! You have played $GAMES_PLAYED games, and your best game took $SCORE guesses."
 fi
 
 GAME() {
@@ -42,10 +42,10 @@ GAME() {
       # if [[ -z $GAMES_PLAYED ]]; then
       #   NEW_GAME_UPDATE=$($PSQL "UPDATE ng SET games_played = 1 WHERE name = '$NAME'")
       # else
-        GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = ($GAMES_PLAYED + 1) WHERE name = '$NAME'")
+      GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = ($GAMES_PLAYED + 1) WHERE name = '$NAME'")
     fi
     if [[ -z $SCORE || $ATTEMPT -lt $SCORE ]]; then
-      BEST_GAME=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$NAME'")
+      BEST_GAME_UPDATE=$($PSQL "UPDATE ng SET score = $ATTEMPT WHERE name = '$NAME'")
       echo new highscore
     fi
   fi

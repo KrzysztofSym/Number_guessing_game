@@ -6,7 +6,6 @@ echo Enter your username:
 read NAME
 
 NUMBER=$((RANDOM % 1000 + 1))
-echo $NUMBER
 ATTEMPT=0
 USER_NAME=$($PSQL "SELECT name FROM ng WHERE name = '$NAME';")
 USER_EXISTS=$($PSQL "SELECT EXISTS(SELECT 1 FROM ng WHERE name = '$NAME');")
@@ -28,7 +27,7 @@ GAME() {
     return 0
   else
     ATTEMPT=$((ATTEMPT + 1))
-    echo $ATTEMPT
+    # echo $ATTEMPT
     if [[ $GUESS -lt $NUMBER ]]; then
       echo "It's higher than that, guess again:"
       GAME
@@ -39,9 +38,7 @@ GAME() {
       return 0
     else
       echo You guessed it in $ATTEMPT tries. The secret number was $NUMBER. Nice job!
-      # if [[ -z $GAMES_PLAYED ]]; then
-      #   NEW_GAME_UPDATE=$($PSQL "UPDATE ng SET games_played = 1 WHERE name = '$NAME'")
-      # else
+
       GAMES_UPDATE=$($PSQL "UPDATE ng SET games_played = games_played + 1 WHERE name = '$NAME'")
     fi
     if [[ -z $SCORE || $ATTEMPT -lt $SCORE ]]; then
